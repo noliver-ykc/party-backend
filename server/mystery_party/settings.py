@@ -2,12 +2,16 @@ from pathlib import Path
 import os
 import environ
 import logging
+from dotenv import load_dotenv
 
 # Initialize environment variables
 env = environ.Env(
     DEBUG=(bool, False)
 )
 environ.Env.read_env()
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,7 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+# Read the secret key from the environment variable
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+# Ensure the key exists
+if not SECRET_KEY:
+    raise ValueError("No SECRET_KEY set for Django application")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
