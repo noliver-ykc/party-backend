@@ -1,17 +1,5 @@
-from pathlib import Path
 import os
-import environ
-import logging
-from dotenv import load_dotenv
-
-# Initialize environment variables
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env()
-
-# Load environment variables from .env file
-load_dotenv()
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,19 +8,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# Read the secret key from the environment variable
-SECRET_KEY = os.getenv('SECRET_KEY')
-
-# Ensure the key exists
-if not SECRET_KEY:
-    raise ValueError("No SECRET_KEY set for Django application")
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your_default_secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+ALLOWED_HOSTS = ['your-vercel-app.vercel.app']  # Replace with your Vercel domain
 
 # Application definition
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -48,7 +32,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add WhiteNoise middleware for static file serving
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -58,9 +42,9 @@ MIDDLEWARE = [
 ]
 
 # CSRF and CORS settings
-CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
+CSRF_TRUSTED_ORIGINS = ['https://party-backend.vercel.app/']  # Replace with your Vercel domain
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST', default=[])
+CORS_ORIGIN_WHITELIST = ['https://party-backend.vercel.app/p']  # Replace with your Vercel domain
 
 ROOT_URLCONF = "mystery_party.urls"
 
@@ -83,48 +67,29 @@ TEMPLATES = [
 WSGI_APPLICATION = "mystery_party.wsgi.application"
 
 # Database
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
 DATABASES = {
-    "default": env.db(),
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
-# Password validation
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
-
-# Internationalization
-LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
-USE_I18N = True
-USE_TZ = True
-
 # Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "mystery_party/static"),
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "mystery_party/static")]
 STATIC_ROOT = os.path.join(BASE_DIR, 'mystery_party/staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Only for development
-if DEBUG:
-    import mimetypes
-    mimetypes.add_type("text/css", ".css", True)
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 LOGIN_REDIRECT_URL = "code"
 LOGOUT_REDIRECT_URL = "home"
 
@@ -134,6 +99,7 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = not DEBUG  # True in production
 
 # Logging configuration
+import logging
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s %(levelname)s %(message)s',
