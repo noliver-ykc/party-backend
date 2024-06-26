@@ -13,7 +13,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your_default_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['your-vercel-app.vercel.app']  # Replace with your Vercel domain
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','https://party-backend.vercel.app']  # Replace with your Vercel domain
 
 # Application definition
 
@@ -42,9 +42,9 @@ MIDDLEWARE = [
 ]
 
 # CSRF and CORS settings
-CSRF_TRUSTED_ORIGINS = ['https://party-backend.vercel.app/']  # Replace with your Vercel domain
+CSRF_TRUSTED_ORIGINS = ['https://party-backend.vercel.app']  # Replace with your Vercel domain
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ['https://party-backend.vercel.app/p']  # Replace with your Vercel domain
+CORS_ORIGIN_WHITELIST = ['https://party-backend.vercel.app']  # Replace with your Vercel domain
 
 ROOT_URLCONF = "mystery_party.urls"
 
