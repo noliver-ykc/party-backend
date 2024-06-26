@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from accounts.views import login_view, check_auth, user_data  # Import from accounts
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import health_check
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -14,7 +15,8 @@ urlpatterns = [
     path('api/login/', login_view, name='login'),
     path('api/check-auth/', check_auth, name='check_auth'),
     path('api/user-data/', user_data, name='user-data'),
-    path('api/', include('codes.urls')),  # Keep other API paths after specific ones
+    path('api/', include('codes.urls')),
+    path('health/', health_check, name='health_check'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

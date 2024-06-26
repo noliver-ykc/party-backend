@@ -5,6 +5,10 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth.decorators import login_required
 
+def health_check(request):
+    return JsonResponse({'status': 'ok'})
+
+
 @login_required
 def check_auth_status(request):
     return JsonResponse({'authenticated': True})
